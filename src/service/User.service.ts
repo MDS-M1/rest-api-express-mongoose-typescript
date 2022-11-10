@@ -24,7 +24,13 @@ export async function createUser(input: UserInput) {
   try {
     const user = await UserModel.create(input);
 
-    return omit(user.toJSON(), "password");
+    return omit(user.toJSON(), [
+      "password",
+      "createdAt",
+      "updatedAt",
+      "role",
+      "__v",
+    ]);
   } catch (e: any) {
     throw new Error(e);
   }
