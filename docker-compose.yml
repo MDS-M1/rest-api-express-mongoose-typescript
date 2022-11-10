@@ -1,0 +1,32 @@
+version: '3.7'
+services:
+  api:
+    container_name: api
+    image: 'node:latest'
+    working_dir: /home/node/app
+    command:
+      - /bin/sh
+      - '-c'
+      - 'yarn install && yarn start'
+    ports:
+      - '3000:3000'
+      - '9100:9100'
+    volumes:
+      - './:/home/node/app'
+    links:
+      - database
+    networks:
+      - back
+  database:
+    container_name: database
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./data:/data/db:rw
+    networks:
+      - back
+networks:
+  back:
+    driver: bridge
+    
