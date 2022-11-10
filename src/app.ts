@@ -1,4 +1,5 @@
 import express, { Request, Response } from "express";
+import cors from "cors";
 import dotenv from "dotenv";
 dotenv.config();
 import config from "config";
@@ -11,10 +12,15 @@ import { restResponseTimeHistogram, startMetricsServer } from "./utils/metrics";
 import swaggerDocs from "./utils/swagger";
 
 const port = config.get<number>("app.port");
+const corsOptions = {
+  origin: "http://localhost:3000",
+  optionsSuccessStatus: 200,
+};
 
 const app = express();
 
 app.use(express.json());
+app.use(cors(corsOptions));
 
 app.use(deserializeUser);
 
