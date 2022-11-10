@@ -9,7 +9,7 @@ services:
       - '-c'
       - 'yarn install && yarn start'
     ports:
-      - '3000:3000'
+      - '3001:3000'
       - '9100:9100'
     volumes:
       - './:/home/node/app'
