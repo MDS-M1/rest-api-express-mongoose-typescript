@@ -1,6 +1,24 @@
 import { FilterQuery } from "mongoose";
 import { omit } from "lodash";
 import UserModel, { UserDocument, UserInput } from "../models/User.model";
+import { databaseResponseTimeHistogram } from "../utils/metrics";
+
+export async function findUsers() {
+  const metricsLabels = {
+    operation: "findUsers",
+  };
+
+  const timer = databaseResponseTimeHistogram.startTimer();
+  try {
+    const results = await UserModel.find().select("-password");
+    timer({ ...metricsLabels, success: "true" });
+    return results;
+  } catch (e) {
+    timer({ ...metricsLabels, success: "false" });
+
+    throw e;
+  }
+}
 
 export async function createUser(input: UserInput) {
   try {

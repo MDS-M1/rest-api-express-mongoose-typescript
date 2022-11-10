@@ -11,7 +11,10 @@ import {
   getUserSessionsHandler,
   deleteSessionHandler,
 } from "./controller/Session.controller";
-import { createUserHandler } from "./controller/User.controller";
+import {
+  createUserHandler,
+  getUsersHandler,
+} from "./controller/User.controller";
 import requireUser from "./middleware/requireUser";
 import validate from "./middleware/validate";
 import havePermission, { Roles } from "./middleware/havePermission";
@@ -43,7 +46,7 @@ function routes(app: Express) {
    * '/users':
    *  post:
    *     tags:
-   *     - User
+   *     - Users
    *     summary: Register a user
    *     requestBody:
    *      required: true
@@ -62,8 +65,26 @@ function routes(app: Express) {
    *        description: Conflict
    *      400:
    *        description: Bad request
+   *  get:
+   *     tags:
+   *     - Users
+   *     summary: Get all users
+   *     responses:
+   *       200:
+   *         description: Success
+   *         content:
+   *          application/json:
+   *           schema:
+   *              $ref: '#/components/schema/User'
+   *       404:
+   *         description: No users found
    */
   app.post("/users", validate(createUserSchema), createUserHandler);
+  app.get(
+    "/users",
+    [requireUser, havePermission(Roles.ADMIN)],
+    getUsersHandler
+  );
 
   app.post(
     "/sessions",

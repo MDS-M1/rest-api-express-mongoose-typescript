@@ -6,10 +6,10 @@ export interface UserInput {
   email: string;
   name: string;
   password: string;
-  role: string;
 }
 
 export interface UserDocument extends UserInput, mongoose.Document {
+  role: string;
   createdAt: Date;
   updatedAt: Date;
   comparePassword(candidatePassword: string): Promise<Boolean>;
