@@ -116,7 +116,11 @@ function routes(app: Express) {
    *       404:
    *         description: Post not found
    */
-  app.get("/post/:postId", validate(getPostSchema), getPostHandler);
+  app.get(
+    "/post/:postId",
+    [requireUser, validate(getPostSchema)],
+    getPostHandler
+  );
   app.post(
     "/post",
     [requireUser, havePermission(Roles.ADMIN), validate(createPostSchema)],
