@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import config from "config";
+import logger from "../utils/logger";
 
 export function signJwt(
   object: Object,
@@ -33,7 +34,7 @@ export function verifyJwt(
       decoded,
     };
   } catch (e: any) {
-    console.error(e);
+    logger.error(e);
     return {
       valid: false,
       expired: e.message === "JWT expired",
