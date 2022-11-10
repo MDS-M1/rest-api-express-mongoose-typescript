@@ -39,10 +39,6 @@ export async function updatePostHandler(
     return res.sendStatus(404);
   }
 
-  if (String(post.author) !== userId) {
-    return res.sendStatus(403);
-  }
-
   const updatedPost = await findAndUpdatePost({ postId }, update, {
     new: true,
   });
@@ -85,10 +81,6 @@ export async function deletePostHandler(
 
   if (!product) {
     return res.sendStatus(404);
-  }
-
-  if (String(product.author) !== userId) {
-    return res.sendStatus(403);
   }
 
   await deletePost({ postId });
