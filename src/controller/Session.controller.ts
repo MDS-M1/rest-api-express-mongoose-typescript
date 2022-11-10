@@ -33,7 +33,7 @@ export async function createUserSessionHandler(req: Request, res: Response) {
     return res.status(401).send("Invalid email or password");
   }
 
-  const tokens = registerCreateSession(req, user._id);
+  const tokens = await registerCreateSession(req, user._id);
 
   return res.send(tokens);
 }
