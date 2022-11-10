@@ -92,7 +92,7 @@ function routes(app: Express) {
    *       404:
    *         description: No posts found
    */
-  app.get("/posts", getPostsHandler);
+  app.get("/posts", requireUser, getPostsHandler);
 
   /**
    * @openapi
@@ -119,11 +119,19 @@ function routes(app: Express) {
   app.get("/post/:postId", validate(getPostSchema), getPostHandler);
   app.post(
     "/post",
-    [requireUser, havePermission([Roles.ADMIN]), validate(createPostSchema)],
+    [requireUser, havePermission(Roles.ADMIN), validate(createPostSchema)],
     createPostHandler
   );
-  app.put("/post/:postId", validate(updatePostSchema), updatePostHandler);
-  app.delete("/post/:postId", validate(deletePostSchema), deletePostHandler);
+  app.put(
+    "/post/:postId",
+    [requireUser, havePermission(Roles.ADMIN), validate(updatePostSchema)],
+    updatePostHandler
+  );
+  app.delete(
+    "/post/:postId",
+    [requireUser, havePermission(Roles.ADMIN), validate(deletePostSchema)],
+    deletePostHandler
+  );
 }
 
 export default routes;
