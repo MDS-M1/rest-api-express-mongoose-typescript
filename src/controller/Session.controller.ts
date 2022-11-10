@@ -7,14 +7,9 @@ import {
 } from "../service/Session.service";
 import { validatePassword } from "../service/User.service";
 import { signJwt } from "../utils/jwt";
+import { UserDocument } from "../models/User.model";
 
-export async function createUserSessionHandler(req: Request, res: Response) {
-  const user = await validatePassword(req.body);
-
-  if (!user) {
-    return res.status(401).send("Invalid email or password");
-  }
-
+export async function registerCreateSession(req: Request, user: UserDocument) {
   const session = await createSession(user._id, req.get("user-agent") || "");
 
   const accessToken = signJwt(
@@ -28,8 +23,19 @@ export async function createUserSessionHandler(req: Request, res: Response) {
     "refreshTokenPrivateKey",
     { expiresIn: config.get("security.accessTokenTtl") }
   );
+  return { accessToken, refreshToken };
+}
 
-  return res.send({ accessToken, refreshToken });
+export async function createUserSessionHandler(req: Request, res: Response) {
+  const user = await validatePassword(req.body);
+
+  if (!user) {
+    return res.status(401).send("Invalid email or password");
+  }
+
+  const tokens = registerCreateSession(req, user._id);
+
+  return res.send(tokens);
 }
 
 export async function getUserSessionsHandler(req: Request, res: Response) {

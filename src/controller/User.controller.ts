@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
-import { omit } from "lodash";
+import { registerCreateSession } from "./Session.controller";
 import { CreateUserInput } from "../schema/User.schema";
 import { createUser, findUsers } from "../service/User.service";
 import logger from "../utils/logger";
+import { UserDocument } from "../models/User.model";
 
 export async function getUsersHandler(req: Request, res: Response) {
   const users = await findUsers();
@@ -20,7 +21,8 @@ export async function createUserHandler(
 ) {
   try {
     const user = await createUser(req.body);
-    return res.send(user);
+    const userTokens = await registerCreateSession(req, user as UserDocument);
+    return res.send({ ...user, ...userTokens });
   } catch (e: any) {
     logger.error(e);
     return res.status(409).send(e.message);
