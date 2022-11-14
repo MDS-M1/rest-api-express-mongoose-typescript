@@ -30,7 +30,7 @@ const deserializeUser = async (
     const newAccessToken = await reIssueAccessToken({ refreshToken });
 
     if (newAccessToken) {
-      res.setHeader("x-access-token", newAccessToken);
+      res.setHeader("authorization", newAccessToken);
     }
 
     const result = verifyJwt(newAccessToken as string, "accessTokenPublicKey");
