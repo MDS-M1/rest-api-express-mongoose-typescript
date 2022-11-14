@@ -9,7 +9,7 @@ import { validatePassword } from "../service/User.service";
 import { signJwt } from "../utils/jwt";
 import { UserDocument } from "../models/User.model";
 
-export async function registerCreateSession(req: Request, user: UserDocument) {
+export async function registerCreateSession(req: Request, user: any) {
   const session = await createSession(user._id, req.get("user-agent") || "");
 
   const accessToken = signJwt(
@@ -33,7 +33,7 @@ export async function createUserSessionHandler(req: Request, res: Response) {
     return res.status(401).send("Invalid email or password");
   }
 
-  const tokens = await registerCreateSession(req, user._id);
+  const tokens = await registerCreateSession(req, user);
 
   return res.send(tokens);
 }
