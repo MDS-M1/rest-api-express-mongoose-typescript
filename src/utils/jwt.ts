@@ -37,7 +37,7 @@ export function verifyJwt(
     logger.error(e);
     return {
       valid: false,
-      expired: e.message === "JWT expired",
+      expired: e.message === "jwt expired",
       decoded: null,
     };
   }
